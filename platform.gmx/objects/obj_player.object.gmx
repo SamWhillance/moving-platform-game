@@ -25,7 +25,50 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string></string>
+            <string>/// Init
+
+jumping = false;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Land a jump
+
+jumping = false;
+speed = 0;
+
+var landed = false;
+var touching = collision_circle(x, y, 8, obj_platform, true, true);
+if (touching != noone){
+    landed = true;
+    
+    x = touching.x;
+    y = touching.y;
+}
+
+if (!landed){
+    instance_destroy();
+    with(ctr_game)alarm[0] = 120;
+}
+</string>
           </argument>
         </arguments>
       </action>
@@ -65,8 +108,70 @@ if (keyboard_check_pressed(vk_down)){
 }
 
 if (moveDir != -1){
-    
+    jumping = true;
+    speed = 4;
+    direction = moveDir*90;
+    alarm[0] = 32/speed;
 }
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Move with platforms
+
+if (!jumping){
+    var touching = instance_place(x, y, obj_platform)
+    
+    if (touching != noone){
+        x += touching.hspeed;
+        y += touching.vspeed;
+    }
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Draw
+
+if (jumping){
+    draw_sprite_ext(sprite_index, 0, x, y+8, 1, 1, 0, c_black, 0.5);
+}
+
+draw_self();
 </string>
           </argument>
         </arguments>

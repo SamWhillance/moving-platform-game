@@ -33,7 +33,9 @@ global.yc = room_height/2;
 currentLayer = 1;
 var numberOfPlatforms = 50;
 var gap = 32;
-var minx, miny, maxx, maxy, xx, yy;
+var reverse = 0;
+var clockwise = true;
+var minx, miny, maxx, maxy, xx, yy, dir;
 
 with(instance_create(global.xc, global.yc, obj_platform)){
     layer = 0;
@@ -45,43 +47,66 @@ for (var i=0; i&lt;numberOfPlatforms; i++){
     maxx = global.xc+(gap*i);
     maxy = global.yc+(gap*i);
     
+    var repeatCreate = irandom_range(1, ceil((currentLayer*currentLayer)/8));
+    var rotationDirection = 180*reverse;//choose(0, 180);
     
-    var repeatCreate = irandom_range(1, ceil(currentLayer/2));
-    var rotationDirection = choose(0, 180);
-    
-    repeat(repeatCreate){
-        var bind = choose(0, 1);
-        var clockwise = true;
-        var dir = 0;
-        
-        // Bind to left/right
-        if (bind == 0){
+    repeat(repeatCreate){        
+        // Flip a coin
+        if (choose(0, 1) == 0){
+            // Bind to left/right
             xx = choose(minx, maxx);
             yy = irandom_range(miny, maxy);
-            dir = 90+rotationDirection;//choose(90, 270);
+            dir = 90+rotationDirection;
             if (xx == minx)clockwise = (dir == 90); else
             if (xx == maxx)clockwise = (dir == 270);
-        } else 
-        // Bind to up/down
-        if (bind == 1){
+            if (reverse)clockwise = !clockwise;
+        } else {
+            // Bind to up/down
             xx = irandom_range(minx, maxx);
             yy = choose(miny, maxy);
-            dir = rotationDirection;//choose(0, 180);
+            dir = rotationDirection;
             if (yy == miny)clockwise = (dir == 0); else
             if (yy == maxy)clockwise = (dir == 180); 
+            if (reverse)clockwise = !clockwise;
         }
         
         var p = instance_create(xx, yy, obj_platform);
-        p.layer = other.currentLayer;
+        p.layer = currentLayer;
         p.clockwise = clockwise;
         p.direction = dir;
-        p.speed = ceil(currentLayer/8);
+        p.speed = ceil(random(0.5) + (currentLayer/12));
     }
     
     currentLayer++;
+    reverse = !reverse;
 }
 
 instance_create(global.xc, global.yc, obj_player);
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Restart game
+
+game_restart();
 </string>
           </argument>
         </arguments>
